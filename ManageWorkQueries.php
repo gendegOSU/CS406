@@ -12,49 +12,49 @@ $taskTypes_query = "SELECT tt.taskTypeName, tt.taskTypeId FROM TaskTypes tt ORDE
 $employeesRoles_query = "SELECT er.employeeId, er.roleId, firstName, lastName FROM EmployeesRoles er join Employees e on er.employeeId = e.employeeId ORDER BY roleId, firstName, lastName ASC";
 
 //execute base Jobs query
-$job_sql_query = $cford_db->prepare($job_query);
+$job_sql_query = $purple_db->prepare($job_query);
 $job_sql_query-> execute();
 $job_result = $job_sql_query-> get_result();
 $job_output = $job_result -> fetch_assoc();
 
 //execute base Customers query
-$customer_sql_query = $cford_db->prepare($customer_query);
+$customer_sql_query = $purple_db->prepare($customer_query);
 $customer_sql_query-> execute();
 $customer_result = $customer_sql_query-> get_result();
 $customer_output = $customer_result -> fetch_assoc();
 
 //execute base Roles query
-$role_sql_query = $cford_db->prepare($role_query);
+$role_sql_query = $purple_db->prepare($role_query);
 $role_sql_query-> execute();
 $role_result = $role_sql_query-> get_result();
 $role_output = $role_result -> fetch_assoc();
 
 //execute base Employees query
-$employee_sql_query = $cford_db->prepare($employee_query);
+$employee_sql_query = $purple_db->prepare($employee_query);
 $employee_sql_query-> execute();
 $employee_result = $employee_sql_query-> get_result();
 $employee_output = $employee_result -> fetch_assoc();
 
 //execute base Equipment query
-$equipment_sql_query = $cford_db->prepare($equipment_query);
+$equipment_sql_query = $purple_db->prepare($equipment_query);
 $equipment_sql_query-> execute();
 $equipment_result = $equipment_sql_query-> get_result();
 $equipment_output = $equipment_result -> fetch_assoc();
 
 //tasks Equipment query
-$tasksEquipment_sql_query = $cford_db->prepare($tasksEquipment_query);
+$tasksEquipment_sql_query = $purple_db->prepare($tasksEquipment_query);
 $tasksEquipment_sql_query-> execute();
 $tasksEquipment_result = $tasksEquipment_sql_query-> get_result();
 $tasksEquipment_output = $tasksEquipment_result -> fetch_assoc();
 
 //tasks Types query
-$taskTypes_sql_query = $cford_db->prepare($taskTypes_query);
+$taskTypes_sql_query = $purple_db->prepare($taskTypes_query);
 $taskTypes_sql_query-> execute();
 $taskTypes_result = $taskTypes_sql_query-> get_result();
 $taskTypes_output = $taskTypes_result -> fetch_assoc();
 
 //employees Roles query
-$employeesRoles_sql_query = $cford_db->prepare($employeesRoles_query);
+$employeesRoles_sql_query = $purple_db->prepare($employeesRoles_query);
 $employeesRoles_sql_query-> execute();
 $employeesRoles_result = $employeesRoles_sql_query-> get_result();
 $employeesRoles_output = $employeesRoles_result -> fetch_assoc();
@@ -81,7 +81,7 @@ $base_query = "SELECT
 	WHERE j.jobId = ?
     ORDER BY taskStartDate ASC;";
 //execute base Jobs query
-$base_sql_query = $cford_db->prepare($base_query);
+$base_sql_query = $purple_db->prepare($base_query);
 $base_sql_query ->bind_param("i", $displayJobId);
 $base_sql_query->execute();
 $base_result = $base_sql_query->get_result();

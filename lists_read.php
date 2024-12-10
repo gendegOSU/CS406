@@ -29,7 +29,7 @@ if ($_GET['page'] == "Jobs") {
 	FROM Jobs j 
     LEFT JOIN Customers c ON j.customerId = c.customerId;";
 
-    $base_sql_query = $cford_db->prepare($base_query);
+    $base_sql_query = $purple_db->prepare($base_query);
     $base_sql_query->execute();
     $base_result = $base_sql_query->get_result();
 
@@ -50,7 +50,7 @@ if ($_GET['page'] == "Jobs") {
     $list_meta['update_names'] = ['NA','NA','NA','NA','NA','NA','NA','NA','NA','NA'];
 
     // Create HTML for the Add form row
-    $customer_result = $cford_db->query("SELECT customerId, customerName FROM Customers ORDER BY customerName ASC");
+    $customer_result = $purple_db->query("SELECT customerId, customerName FROM Customers ORDER BY customerName ASC");
 
     $form_row = '
 <form action="" method="post" class="Add">
@@ -85,7 +85,7 @@ if ($_GET['page'] == "TaskTypes") {
 
     $base_query = "SELECT taskTypeName, taskTypeId FROM TaskTypes ORDER BY taskTypeName ASC;";
 
-    $base_sql_query = $cford_db->prepare($base_query);
+    $base_sql_query = $purple_db->prepare($base_query);
     $base_sql_query->execute();
     $base_result = $base_sql_query->get_result();
 
@@ -129,7 +129,7 @@ if ($_GET['page'] == "Customers") {
     LEFT JOIN Jobs j ON c.customerId = j.customerId 
     GROUP BY customerName, phoneNumber, email;";
 
-    $base_sql_query = $cford_db->prepare($base_query);
+    $base_sql_query = $purple_db->prepare($base_query);
     $base_sql_query->execute();
     $base_result = $base_sql_query->get_result();
 
@@ -177,7 +177,7 @@ if ($_GET['page'] == "Employees") {
     LEFT JOIN Roles r ON er.roleId = r.roleId
     ORDER BY firstName, lastName ASC";
 
-    $base_sql_query = $cford_db->prepare($base_query);
+    $base_sql_query = $purple_db->prepare($base_query);
     $base_sql_query->execute();
     $base_result = $base_sql_query->get_result();
 
@@ -233,7 +233,7 @@ if ($_GET['page'] == "EmployeesRoles") {
     JOIN Roles r ON er.roleId = r.roleId
     ORDER BY employeeName ASC;";
 
-    $base_sql_query = $cford_db->prepare($base_query);
+    $base_sql_query = $purple_db->prepare($base_query);
     $base_sql_query->execute();
     $base_result = $base_sql_query->get_result();
 
@@ -254,8 +254,8 @@ if ($_GET['page'] == "EmployeesRoles") {
     $list_meta['update_names'] = ['NA','roleId'];
 
     // Create HTML for the Add form row
-    $employee_result = $cford_db->query("SELECT employeeId, firstName, lastName FROM Employees ORDER BY firstName, lastName ASC");
-    $role_result = $cford_db->query("SELECT roleId, roleName FROM Roles ORDER BY roleName ASC");
+    $employee_result = $purple_db->query("SELECT employeeId, firstName, lastName FROM Employees ORDER BY firstName, lastName ASC");
+    $role_result = $purple_db->query("SELECT roleId, roleName FROM Roles ORDER BY roleName ASC");
 
     $form_row = '
 <form action="" method="post" class="Add">
@@ -286,7 +286,7 @@ if ($_GET['page'] == "Roles") {
 
     $base_query = "SELECT roleName, roleId FROM Roles ORDER BY roleName ASC;";
 
-    $base_sql_query = $cford_db->prepare($base_query);
+    $base_sql_query = $purple_db->prepare($base_query);
     $base_sql_query->execute();
     $base_result = $base_sql_query->get_result();
 
@@ -329,7 +329,7 @@ if ($_GET['page'] == "Equipment") {
 	FROM Equipment e 
     JOIN EquipmentTypes et ON e.equipmentTypeId = et.equipmentTypeId;";
 
-    $base_sql_query = $cford_db->prepare($base_query);
+    $base_sql_query = $purple_db->prepare($base_query);
     $base_sql_query->execute();
     $base_result = $base_sql_query->get_result();
 
@@ -350,7 +350,7 @@ if ($_GET['page'] == "Equipment") {
     $list_meta['update_names'] = ['equipmentName','equipmentTypeId','quantityOnHand','external'];
 
     // Create HTML for the Add form row
-    $equipmentTypes_result = $cford_db->query("SELECT equipmentTypeId, equipmentTypeName FROM EquipmentTypes ORDER BY equipmentTypeName ASC");
+    $equipmentTypes_result = $purple_db->query("SELECT equipmentTypeId, equipmentTypeName FROM EquipmentTypes ORDER BY equipmentTypeName ASC");
 
     $form_row = '
 <form action="" method="post" class="Add">
@@ -379,7 +379,7 @@ if ($_GET['page'] == "EquipmentTypes") {
 
     $base_query = "SELECT equipmentTypeName, equipmentTypeId FROM EquipmentTypes ORDER BY equipmentTypeName ASC;";
 
-    $base_sql_query = $cford_db->prepare($base_query);
+    $base_sql_query = $purple_db->prepare($base_query);
     $base_sql_query->execute();
     $base_result = $base_sql_query->get_result();
 

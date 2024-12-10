@@ -2,7 +2,7 @@
 // Delete Tasks
 if(isset($_POST['DeleteTask'])) {
 
-    $delete_query = $cford_db->prepare("DELETE FROM Tasks WHERE taskId = ?;");
+    $delete_query = $purple_db->prepare("DELETE FROM Tasks WHERE taskId = ?;");
     $delete_query->bind_param("i", $_POST["DeleteTask"]);
     $delete_query->execute();
 }
@@ -11,7 +11,7 @@ if(isset($_POST['DeleteTask'])) {
 // Delete TasksRoles
 if(isset($_POST['deleteTaskRoleId'])) {
 
-    $delete_query = $cford_db->prepare("DELETE FROM TasksRoles WHERE taskRoleId = ?;");
+    $delete_query = $purple_db->prepare("DELETE FROM TasksRoles WHERE taskRoleId = ?;");
     $delete_query->bind_param("i", $_POST["deleteTaskRoleId"]);
     $delete_query->execute();
 }
@@ -19,7 +19,7 @@ if(isset($_POST['deleteTaskRoleId'])) {
 // Delete TasksRolesEmployees
 if(isset($_POST['deleteTaskRoleEmp'])) {
 
-    $delete_query = $cford_db->prepare("DELETE FROM TasksRolesEmployees WHERE taskRoleId = ? and employeeId = ? ;");
+    $delete_query = $purple_db->prepare("DELETE FROM TasksRolesEmployees WHERE taskRoleId = ? and employeeId = ? ;");
     $delete_query->bind_param("ii",$_POST['taskRoleId'], $_POST["deleteTaskRoleEmp"]);
     $delete_query->execute();
 }
@@ -27,7 +27,7 @@ if(isset($_POST['deleteTaskRoleEmp'])) {
 // Delete TasksEquipment
 if(isset($_POST['deleteTaskEquip'])) {
 
-    $delete_query = $cford_db->prepare("DELETE FROM TasksEquipment WHERE taskId= ? and equipmentId = ?;");
+    $delete_query = $purple_db->prepare("DELETE FROM TasksEquipment WHERE taskId= ? and equipmentId = ?;");
     $delete_query->bind_param("ii", $_POST['taskId'], $_POST["deleteTaskEquip"]);
     $delete_query->execute();
 }
@@ -40,7 +40,7 @@ if(isset($_POST['deleteType'])) {
 
     // Delete from Jobs
     if($_POST['deleteType'] == "Jobs") {
-        $delete_query = $cford_db->prepare("DELETE FROM Jobs WHERE jobId = ?;");
+        $delete_query = $purple_db->prepare("DELETE FROM Jobs WHERE jobId = ?;");
         $delete_query->bind_param("i", $_POST["deleteRef1"]);
         $delete_query->execute();
 
@@ -49,7 +49,7 @@ if(isset($_POST['deleteType'])) {
 
     // Delete from TaskTypes
     elseif($_POST['deleteType'] == "TaskTypes") {
-        $delete_query = $cford_db->prepare("DELETE FROM TaskTypes WHERE taskTypeId = ?;");
+        $delete_query = $purple_db->prepare("DELETE FROM TaskTypes WHERE taskTypeId = ?;");
         $delete_query->bind_param("i", $_POST["deleteRef1"]);
         
         // check if foreign key restriction exists
@@ -67,7 +67,7 @@ if(isset($_POST['deleteType'])) {
 
     // Delete from Customers
     elseif($_POST['deleteType'] == "Customers") {
-        $delete_query = $cford_db->prepare("DELETE FROM Customers WHERE customerId = ?;");
+        $delete_query = $purple_db->prepare("DELETE FROM Customers WHERE customerId = ?;");
         $delete_query->bind_param("i", $_POST["deleteRef1"]);
 
         // check if foreign key restriction exists
@@ -85,7 +85,7 @@ if(isset($_POST['deleteType'])) {
 
     // Delete from Employees
     elseif($_POST['deleteType'] == "Employees") {
-        $delete_query = $cford_db->prepare("DELETE FROM Employees WHERE employeeId = ?;");
+        $delete_query = $purple_db->prepare("DELETE FROM Employees WHERE employeeId = ?;");
         $delete_query->bind_param("i", $_POST["deleteRef1"]);
         $delete_query->execute();
 
@@ -94,7 +94,7 @@ if(isset($_POST['deleteType'])) {
 
     // Delete from EmployeesRoles
     elseif($_POST['deleteType'] == "EmployeesRoles") {
-        $delete_query = $cford_db->prepare("DELETE FROM EmployeesRoles WHERE employeeId = ? AND roleId = ?;");
+        $delete_query = $purple_db->prepare("DELETE FROM EmployeesRoles WHERE employeeId = ? AND roleId = ?;");
         $delete_query->bind_param("ii", $_POST["deleteRef1"], $_POST["deleteRef2"]);
         $delete_query->execute();
 
@@ -103,7 +103,7 @@ if(isset($_POST['deleteType'])) {
 
     // Delete from Roles
     elseif($_POST['deleteType'] == "Roles") {
-        $delete_query = $cford_db->prepare("DELETE FROM Roles WHERE roleId = ?;");
+        $delete_query = $purple_db->prepare("DELETE FROM Roles WHERE roleId = ?;");
         $delete_query->bind_param("i", $_POST["deleteRef1"]);
 
         // check if foreign key restriction exists
@@ -121,7 +121,7 @@ if(isset($_POST['deleteType'])) {
 
     // Delete from Equipment
     elseif($_POST['deleteType'] == "Equipment") {
-        $delete_query = $cford_db->prepare("DELETE FROM Equipment WHERE equipmentId = ?;");
+        $delete_query = $purple_db->prepare("DELETE FROM Equipment WHERE equipmentId = ?;");
         $delete_query->bind_param("i", $_POST["deleteRef1"]);
         $delete_query->execute();
 
@@ -130,7 +130,7 @@ if(isset($_POST['deleteType'])) {
 
     // Delete from EquipmentTypes
     elseif($_POST['deleteType'] == "EquipmentTypes") {
-        $delete_query = $cford_db->prepare("DELETE FROM EquipmentTypes WHERE equipmentTypeId = ?;");
+        $delete_query = $purple_db->prepare("DELETE FROM EquipmentTypes WHERE equipmentTypeId = ?;");
         $delete_query->bind_param("i", $_POST["deleteRef1"]);
 
         // check if foreign key restriction exists
