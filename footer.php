@@ -4,6 +4,7 @@
                 Colin Ford & Gary Gende<br>
                 Group 101<br>
                 Down With PHP
+                <br><?php echo (hrtime(true)-$starttime)/1000000000;?>
             </div>
         </footer>
     </body>

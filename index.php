@@ -1,4 +1,5 @@
 <?php
+$starttime = hrtime(true);
 
     // Run these scripts, in the following order, to build the page
     include "includes.php";

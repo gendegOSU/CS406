@@ -53,7 +53,7 @@ while($row_index <= array_key_last($list_rows)) {
                 $rowoutput .= '<td class="cell" id="'.$_GET['page'].$col_index.'"><input type="text" name="'.$list_meta['update_names'][$col_index].'" value="'.$col.'"></td>';
             }
             elseif($_GET['page'] == 'Jobs' && $col_index == 0){
-                $rowoutput .= '<td class="cell" id="'.$_GET['page'].$col_index.'"><a href="/?page=ManageWork&jobId='.$list_rows[$row_index][$list_meta['num_cols']].'">'.$col.'</a></td>';
+                $rowoutput .= '<td class="cell" id="'.$_GET['page'].$col_index.'"><a href="?page=ManageWork&jobId='.$list_rows[$row_index][$list_meta['num_cols']].'">'.$col.'</a></td>';
             }
             elseif($_GET['page'] == 'Equipment' && $col_index == 1){
                 $rowoutput .= '<td class="cell" id="'.$_GET['page'].$col_index.'"><select name="equipmentTypeId" required>';

@@ -5,15 +5,16 @@ table {margin-top: .5em; margin-left: 5%; width: 80%; max-width: 1000px; backgro
 td {width: 33%;}
 form {margin: 0;}
 h1 {color:#450777;}
-a:link {color:#1801a8}
-a:visited {color:#1801a8}
+a:link {color:#1801a8;}
+a:visited {color:#1801a8;}
 .topnav a {margin-left: .7em; font: bold 1.1em sans-serif;}
 .topnav {margin-bottom: 1.5em; width: 90%; max-width: 1100px; padding-bottom: .3em; border-bottom: thick double #450777;}
 .right {text-align: right;}
 .left {text-align: left;}
 .narrow {width: 1%; white-space: nowrap;}
-.header {text-align: left}
-.cell {text-align: left}
+.header {text-align: left;}
+.cell {text-align: left;}
+.cell input {border: thin solid #c1c1c1;}
 .signature {border-top: solid 2px #450777; margin-top: 1.5em; width: 20em; padding: .4em; }
 .updateDeleteBox {display: flex;}
 .updateDeleteBox input {margin-right: .5em;}
@@ -24,7 +25,7 @@ a:visited {color:#1801a8}
 /* --- Manage Work Page Styles --- */
 
 .JobHeader th {font-size: large; border-bottom: 2px solid black;}
-.Jobheader th input {font-size: large; text-align: right; font-weight: bold; width: 170px}
+.Jobheader th input {font-size: large; text-align: right; font-weight: bold; width: 170px;}
 #NewNum {width: 30px;}
 #city {width: 120px;}
 #state {width: 40px;}
@@ -36,12 +37,7 @@ a:visited {color:#1801a8}
 .innertable {background-color: #f1f1f1; border: 1px solid black; border-collapse: collapse; margin-left: 10%; width: 70%; max-width: 850px;font-size: 0.8rem;}
 .innertable th{border: 1px solid black; padding: 2px; text-align: center; background-color:#f1f1f1;} 
 .innertable td{ border: 1px solid black; padding: 2px; text-align: center; background-color: white;}
-.mwinput {
-    width: 70%;
-    padding: 2px;
-    font-size: 0.8rem;
-    text-align: center;
-}
+.mwinput {width: 70%; padding: 2px; font-size: 0.8rem; text-align: center;}
 
 
 /* --- Jobs Page Styles --- */
