@@ -36,6 +36,8 @@ if (isset($_POST['NewRole'])) {
 // Assign Employee To TaskRole
 if(isset($_POST['NewRoleEmp']) && $_POST['NewRoleEmp']!=="") {
 
+    include 'ManageWorkQueries.php';
+
     foreach ($uniqueTaskRoles as $taskRole){
         if($taskRole['taskRoleId'] == $_POST['addTREtaskRoleId']){
             $roleId = $taskRole['roleId'];

@@ -1,4 +1,5 @@
 <?php
+$MWstart = true;
 include 'ManageWorkQueries.php';
 ?>
 
