@@ -5,14 +5,14 @@ include "lists_read.php";
 
 // Initial HTML and display report messages from queries (if they exist)
 $row_index = 0;
-echo '<main><table border = 4 cellpadding = 5>
+echo '<div id="'.get_pagetype_ref().'Box"><table border = 4 cellpadding = 5>
 ';
 
 // Add header row
 $rowoutput = '<tr>';
 $col_index = 0;
-foreach ($list_rows[$row_index++] as $col) {
-    $rowoutput .= '<th class="header" id="'.$_GET['page'].$col_index.'">'.$col.'</th>';
+foreach ($list_rows[$row_index++] as $col_content) {
+    $rowoutput .= '<th class="header" id="'.get_pagetype_ref().$col_index.'">'.$col_content.'</th>';
     $col_index++;
 }
 $rowoutput .= '</tr>
@@ -21,7 +21,7 @@ echo $rowoutput;
 
 
 // Create row with "Add New Item" form
-echo $list_meta['add_form_row'];
+if (isset($list_meta['add_form_row'])) echo $list_meta['add_form_row'];
 
 
 // Add all data rows
@@ -38,65 +38,50 @@ while($row_index <= array_key_last($list_rows)) {
 
     // Input row data from the database
     $col_index = 0;
-    foreach ($list_rows[$row_index] as $col) {
+    foreach ($list_rows[$row_index] as $col_content) {
         if($col_index < $list_meta['num_cols']){
 
             // Check if this cell is an updatable form field and insert the appropriate HTML
-            //      Four special cases:
-            //          First column on Jobs page - add link to Manage Work page for that job
-            //          Second column on Employee Roles page - add dropdown
-            //          Second column on Equipment page - add dropdown
-            //          Fourth column on Equipment page - add dropdown
+            //      Four cases:
+            //          A link in the first column
+            //          A dropdown in a form
+            //          A text field in a form
+            //          A standard cell with no extra requirements
 
-            // This if is equivalent to NOT(update_name==NA OR (page==Equipment AND (col_index == 1 OR 3)) OR page==EmployeesRoles)
-            if(!($list_meta['update_names'][$col_index] == 'NA' || ($_GET['page'] == 'Equipment' && ($col_index == 1 || $col_index == 3)) || $_GET['page'] == 'EmployeesRoles' )){
-                $rowoutput .= '<td class="cell" id="'.$_GET['page'].$col_index.'"><input type="text" name="'.$list_meta['update_names'][$col_index].'" value="'.$col.'"></td>';
+            $is_update_cell = ($list_meta['no_update'] == FALSE && $list_meta['update_names'][$col_index] != 'NA');
+
+            if ($list_meta['link_first_col'] == TRUE && $col_index == 0) {
+                $rowoutput .= '<td class="cell" id="'.get_pagetype_ref().$col_index.'"><a href="?page='.$pagetype.'&Id='.$list_rows[$row_index][$list_meta['num_cols']].'">'.$col_content.'</a></td>';
             }
-            elseif($_GET['page'] == 'Jobs' && $col_index == 0){
-                $rowoutput .= '<td class="cell" id="'.$_GET['page'].$col_index.'"><a href="?page=ManageWork&jobId='.$list_rows[$row_index][$list_meta['num_cols']].'">'.$col.'</a></td>';
-            }
-            elseif($_GET['page'] == 'Equipment' && $col_index == 1){
-                $rowoutput .= '<td class="cell" id="'.$_GET['page'].$col_index.'"><select name="equipmentTypeId" required>';
-                foreach($equipmentTypes_result as $equipmentType){
-                    $rowoutput .= '<option value='.$equipmentType["equipmentTypeId"];
-                    if ($col == $equipmentType["equipmentTypeName"]) $rowoutput .= ' selected ';
-                    $rowoutput .= '>'.$equipmentType["equipmentTypeName"].'</option>';
+            elseif ($is_update_cell && $list_meta['dropdowns'][$col_index] != 'NA') {
+                $rowoutput .= '<td class="cell" id="'.get_pagetype_ref().$col_index.'"><select name="'.$list_meta['update_names'][$col_index].'">';
+                
+                foreach($list_meta['dropdowns'][$col_index] as $key => $option){
+                    $rowoutput .= '<option value="'.$key.'" ';
+                    if ($col_content == $key || $col_content == $option) $rowoutput .= ' selected ';
+                    $rowoutput .= '>'.$option.'</option>';
                 }
                 $rowoutput .= '</select></td>';
             }
-            elseif($_GET['page'] == 'Equipment' && $col_index == 3){
-                $rowoutput .= '<td class="cell" id="'.$_GET['page'].$col_index.'"><select name="external" required><option value="1"';
-                if ($col == "1") $rowoutput .= ' selected ';
-                $rowoutput .= '>Yes</option><option value="0"';
-                if ($col == "0") $rowoutput .= ' selected ';
-                $rowoutput .= '>No</option></select></td>';
+            elseif ($is_update_cell) {
+                $rowoutput .= '<td class="cell" id="'.get_pagetype_ref().$col_index.'"><input type="text" name="'.$list_meta['update_names'][$col_index].'" value="'.$col_content.'"></td>';
             }
-            elseif($_GET['page'] == 'EmployeesRoles' && $col_index == 1){
-                $rowoutput .= '<td class="cell" id="'.$_GET['page'].$col_index.'"><select name="roleId" required>';
-                foreach($role_result as $role){
-                    $rowoutput .= '<option value='.$role["roleId"];
-                    if ($col == $role["roleName"]) {
-                        $rowoutput .= ' selected ';
-                        $oldRoleId = $role["roleId"];
-                    }
-                    $rowoutput .= '>'.$role["roleName"].'</option>';
-                }
-                $rowoutput .= '</select></td>';
+            else {
+                $rowoutput .= '<td class="cell" id="'.get_pagetype_ref().$col_index.'">'.$col_content.'</td>';
             }
-            else{
-                $rowoutput .= '<td class="cell" id="'.$_GET['page'].$col_index.'">'.$col.'</td>';
-            }
+
+            $rowoutput .= '
+        ';
+    
+            $col_index++;
         }
-
-        $col_index++;
     }
     
     // Create update and delete buttons
-    $rowoutput .= '
-    <td id="'.$_GET['page'].$col_index.'"><div class="updateDeleteBox" >
+    $rowoutput .= '<td id="'.get_pagetype_ref().$col_index.'"><div class="updateDeleteBox" >
         ';
     if(!$list_meta['no_update']) {
-        $rowoutput .= '<input type="hidden" name="updateType" value="'.$_GET['page'].'">
+        $rowoutput .= '<input type="hidden" name="updateType" value="'.get_pagetype_ref().'">
         <input type="hidden" name="updateRef" value="'.$list_rows[$row_index][$list_meta['num_cols']].'">';
         if (isset($oldRoleId)) $rowoutput .= '
         <input type="hidden" name="oldRoleId" value="'.$oldRoleId.'">';
@@ -104,14 +89,15 @@ while($row_index <= array_key_last($list_rows)) {
         <input type="submit" value="Update">
     </form>';
     }
-    $rowoutput .='<form action="" method="post">
-        <input type="hidden" name="deleteRef1" value="'.$list_rows[$row_index][$list_meta['num_cols']].'">
-        <input type="hidden" name="deleteRef2" value="';
+    $rowoutput .='<form action="'.get_pagetype_ref('link').'" method="post">
+        <input type="hidden" name="deleteRef1" value="'.$list_rows[$row_index][$list_meta['num_cols']];
     if(isset($list_rows[$row_index][$list_meta['num_cols']+1])) {
+        $rowoutput .= '">
+        <input type="hidden" name="deleteRef2" value="';
         $rowoutput .= $list_rows[$row_index][$list_meta['num_cols']+1];
     }
     $rowoutput .= '">
-        <input type="hidden" name="deleteType" value="'.$_GET['page'].'">
+        <input type="hidden" name="deleteType" value="'.get_pagetype_ref().'">
         <input type="submit" value="Delete">
     </form></div></td>';
 
@@ -123,8 +109,7 @@ while($row_index <= array_key_last($list_rows)) {
 
 
 echo '
-</table>
-</main>
+</table></div>
 ';
 
 ?>

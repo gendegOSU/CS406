@@ -7,8 +7,8 @@ form {margin: 0;}
 h1 {color:#450777;}
 a:link {color:#1801a8;}
 a:visited {color:#1801a8;}
-.topnav a {margin-left: .7em; font: bold 1.1em sans-serif;}
-.topnav {margin-bottom: 1.5em; width: 90%; max-width: 1100px; padding-bottom: .3em; border-bottom: thick double #450777;}
+.topnav a {margin-left: .9em; font: bold 1.1em sans-serif;}
+.topnav {font-size: large; margin-bottom: 1.5em; width: 90%; max-width: 1100px; padding-bottom: .3em; border-bottom: thick double #450777;}
 .right {text-align: right;}
 .left {text-align: left;}
 .narrow {width: 1%; white-space: nowrap;}
@@ -50,8 +50,9 @@ a:visited {color:#1801a8;}
 /* --- Customers Page Styles --- */
 
 #Customers0 input {width: 18em;}
-#Customers1 input {width: 11em;}
-#Customers2 input {width: 18em;}
+#Customers1 input {width: 16em;}
+#Customers2 input {width: 11em;}
+#Customers3 input {width: 18em;}
 
 
 /* --- Employees Page Styles --- */
@@ -63,3 +64,28 @@ a:visited {color:#1801a8;}
 
 #Equipment2 input {width: 4em;}
 
+
+
+#sideNavContainer {display: flex; width: 80%; max-width: 1100px; min-width:fit-content; background-color: #444; border-radius: .2em;}
+#sideNav {display:inline-block; width: 8em; margin: 1.5px; padding: .6em 0 .8em .6em; background-color: #a7a7a7; border-radius: .15em 0 0 .15em;}
+#sideNav a {line-height: 1.62; font-weight: bold;}
+#navContent {display:inline-block; flex-grow: 1; margin: 1.5px 1.5px 1.5px 0px; padding-top: 1.2em; padding-right: 2.8em; background-color: #f1f1f1; border-radius: 0 .15em .15em 0;}
+
+.sectionLabel {font-size: larger; font-weight: bold; text-align: center; width: 80%; max-width: 1000px; margin-left: 5%; margin-top: .7em;}
+.contentHeader th {font-size: large; border-bottom: 2px solid black;}
+.contentheader th input {font-size: large; font-weight: bold; width: 15em;}
+.addAltContact tr {margin-top: 1em;}
+#notes {width: 75%; height: 5em;}
+#city {width: 120px;}
+#state {width: 40px;}
+
+.trDivider {width: 100%; border-top: solid black 1px; font-size: .1em;}
+
+/* --- Vendor Page Styles --- */
+
+#Vendors0 input {width: 9em;}
+#Vendors1 input {width: 9em;}
+#Vendors2 input {width: 10.5em;}
+#Vendors3 input {width: 10em;}
+#Vendors4 input {width: 6em;}
+#Vendors5 input {width: 2.5em;}

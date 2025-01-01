@@ -1,15 +1,9 @@
 <?php
-if(isset($_GET['page'])) {
-  if ($_GET['page'] == 'ManageWork') {
-    $pagename = 'Manage Work';
-  } elseif ($_GET['page'] == 'EmployeesRoles') {
-    $pagename = 'Employee Roles';
-  } elseif ($_GET['page'] == 'TaskTypes') {
-    $pagename = 'Task Types';
-  } elseif ($_GET['page'] == 'EquipmentTypes') {
-    $pagename = 'Equipment Types';
+if(isset($pagetype)) {
+  if ($pagetype == 'Admin') {
+    $pagename = 'Site Admin';
   } else {
-    $pagename = $_GET['page'];
+    $pagename = $pagetype;
   }
 }
 ?><html>
@@ -21,15 +15,13 @@ if(isset($_GET['page'])) {
     <header>
       <h1>Purple Rain Job Scheduler<?php if(isset($pagename)) echo " - $pagename"; ?></h1>
       <div class ="topnav">
-        <a class = "active" href="?page=Jobs">Jobs</a>
-        <a class = "active" href="?page=TaskTypes">Task Types</a>
-        <a class = "active" href="?page=Customers">Customers</a>
-        <a class = "active" href="?page=Employees">Employees</a>
-        <a class = "active" href="?page=EmployeesRoles">Employee Roles</a>
-        <a class = "active" href="?page=Roles">Roles</a>
-        <a class = "active" href="?page=Equipment">Equipment</a>
-        <a class = "active" href="?page=EquipmentTypes">Equipment Types</a>
-        <a class = "active" href="?page=ManageWork">Manage Work</a>
+        <a href="?page=Calendar">Calendar</a>
+        <a href="?page=Customers">Customers</a>
+        <a href="?page=Jobs">Jobs</a>
+        <a href="?page=Employees">Employees</a>
+        <a href="?page=Equipment">Equipment</a>
+        <a href="?page=Materials">Materials</a>
+        <a href="?page=Admin">Site Admin</a>
       </div>
     <?php
 if(isset($reportmessage)){
@@ -37,3 +29,4 @@ if(isset($reportmessage)){
 }
 ?>
     </header>
+    <main>

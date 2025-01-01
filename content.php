@@ -1,15 +1,40 @@
 <?php
 
-// Depending on the URL requested, return page associated with that URL name
+// Depending on the URL requested, return page components associated with that URL name
 
-$existing_pages = array('Jobs','TaskTypes','Customers', 'Employees', 'EmployeesRoles', 'Roles','Equipment', 'EquipmentTypes', 'ManageWork');
+$side_nav_pages = ['Calendar', 'Employees', 'Admin'];
+$list_pages = ['Customers', 'Jobs', 'Materials', 'Employees', 'Equipment'];
 
-if(isset($_GET['page']) && $_GET['page'] == 'ManageWork') {
-    include 'ManageWork.php';
-} 
-elseif (isset($_GET['page']) && in_array($_GET['page'], $existing_pages)) {
-    include 'lists.php';
+
+if (in_array($pagetype, $side_nav_pages)) {
+    include 'sideNav.php';
 }
 
+
+if ($pagetype === 'Calendar') {
+    include 'calendar.php';
+}
+elseif ($pagetype === 'Customers') {
+    include 'customers.php';
+}
+elseif ($pagetype === 'Jobs') {
+    include 'jobs.php';
+}
+elseif ($pagetype === 'Employees') {
+    include 'employees.php';
+}
+elseif ($pagetype === 'Admin') {
+    include 'admin.php';
+}
+
+
+if (in_array($pagetype, $side_nav_pages)) {
+    include 'closeSideNav.php';
+}
+
+
+if (in_array($pagetype, $list_pages)) {
+    include 'lists.php';
+}
 
 ?>
