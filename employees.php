@@ -3,7 +3,7 @@
 if ($page_sub == 'EmpTasks') {
 
 }
-elseif ($page_sub == NULL || $page_sub == 'EmpInfo') {
+elseif ($page_sub == NULL || $page_sub == 'EmpDetails') {
 
 
     $roles_array = $purple_db->query("SELECT roleName, roleId FROM Roles ORDER BY roleName ASC")->fetch_all(MYSQLI_ASSOC);
@@ -26,7 +26,7 @@ elseif ($page_sub == NULL || $page_sub == 'EmpInfo') {
         }    
     }
 
-    echo '<div id="EmpInfoBox">
+    echo '<div id="EmpDetailsBox">
     <form action="" method="post">
         <input type="hidden" name="'.($id_set?'updateEmployee':'addNewEmployee').'" value="'.($id_set?$empId:'1').'">   
         <table>
@@ -43,7 +43,7 @@ elseif ($page_sub == NULL || $page_sub == 'EmpInfo') {
                 <td><label for="'.($id_set?'e':'NewE').'mployeeEmail"><strong>Email Address:</strong></label> <input type="text" name="'.($id_set?'e':'NewE').'mployeeEmail" Value="'.($id_set ? $employee_details['0']['employeeEmail']:'').'"></td>
             </tr>
             <tr>
-                <td colspan="2" class="right"><input type="submit" value="'.($id_set?'Update':'Add').' Employee / Qualified Roles"></td>
+                <td colspan="2" class="right"><input type="submit" value="'.($id_set?'Update Employee / Qualified Roles':'Add Employee').'"></td>
             </tr>
             <tr><td colspan="2" class="trDivider">&nbsp;</td></tr>
             <tr>
@@ -61,7 +61,7 @@ elseif ($page_sub == NULL || $page_sub == 'EmpInfo') {
 
     echo '            <tr><td colspan="2" class="trDivider">&nbsp;</td></tr>
             <tr>
-                <td colspan="2" class="right"><input type="submit" value="'.($id_set?'Update':'Add').' Employee / Qualified Roles"></td>
+                <td colspan="2" class="right"><input type="submit" value="'.($id_set?'Update Employee / Qualified Roles':'Add Employee').'"></td>
             </tr>
         </table>
     </form>
@@ -69,6 +69,6 @@ elseif ($page_sub == NULL || $page_sub == 'EmpInfo') {
 }
 
 // TODO change employee list layout (inlcude links to info and task views)
-// TODO add delete functionality
+// TODO Tasks View
 
 ?>

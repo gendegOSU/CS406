@@ -3,7 +3,6 @@
 if($pagetype == 'Admin') echo '
     <div id="sideNavContainer">
         <div id="sideNav">
-            <a href="?page=Admin&sub=EmpRoles">Employee Roles</a><br>
             <a href="?page=Admin&sub=EquipTypes">Equipment Types</a><br>
             <a href="?page=Admin&sub=JobStatuses">Job Statuses</a><br>
             <a href="?page=Admin&sub=JobTypes">Job Types</a><br>
@@ -20,7 +19,7 @@ if($pagetype == 'Admin') echo '
 if($pagetype == 'Employees') echo '
     <div id="sideNavContainer">
         <div id="sideNav">
-            <a href="?page=Employees&sub=EmpInfo">Employee Info</a><br>
+            <a href="?page=Employees&sub=EmpDetails">Employee Details</a><br>
             <a href="?page=Employees&sub=EmpTasks">Employee Tasks</a>
         </div>
     <div id="navContent">

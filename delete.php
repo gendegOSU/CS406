@@ -91,7 +91,7 @@ if(isset($_POST['deleteType'])) {
     }
 
     // Delete from Employees
-    elseif($_POST['deleteType'] == 'Employees') {
+    elseif($_POST['deleteType'] == 'Employees' || $_POST['deleteType'] == 'EmpDetails') {
         $delete_query = $purple_db->prepare('DELETE FROM Employees WHERE employeeId = ?;');
         $delete_query->bind_param('i', $_POST['deleteRef1']);
         $delete_query->execute();

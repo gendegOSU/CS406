@@ -1,18 +1,24 @@
 
 <?php
 
-    // Update Job details
-    if (isset($_POST['updateJobId'])) {
-        if($_POST['customerId'] == 'none') {
-            $customer = NULL;
-        } else {
-            $customer = $_POST['customerId'];
-        }
+// Update Job details
+if (isset($_POST['updateJobId'])) {
 
-        $update_job_query = $purple_db->prepare('UPDATE Jobs SET status = ?, customerId = ?, startDate = ?, endDate = ?, locationName = ?, streetAddress = ?, city = ?, state = ?, comments = ?  WHERE jobId = ?;');
-        $update_job_query->bind_param('sisssssssi', $_POST['status'], $customer, $_POST['jobStartDate'], $_POST['jobEndDate'], $_POST['locationName'], $_POST['streetAddress'], $_POST['city'], $_POST['state'], $_POST['comments'], $_POST['updateJobId']);
-        $update_job_query->execute();
+    if ($_POST['streetAddress'] != '') {
+        $newJobName = $_POST['streetAddress'];
+    } else {
+        $customer_query = $purple_db->prepare('SELECT customerName FROM Customers WHERE customerId = ?;');
+        $customer_query->bind_param('i', $_POST['customerId']);
+        $customer_query->execute();
+        $customer_result = $customer_query->get_result()->fetch_assoc();
+
+        $newJobName = $customer_result['customerName'].' - '.$_POST['jobStartDate'].' to '.$_POST['jobEndDate'];
     }
+
+    $update_job_query = $purple_db->prepare('UPDATE Jobs SET customerId = ?, jobTypeId = ?, jobStatusId = ?, jobName = ?, jobStartDate = ?, jobEndDate = ?, jobNotes = ?, locationName = ?, streetAddress = ?, city = ?, state = ?, followUpDate = ?  WHERE jobId = ?;');
+    $update_job_query->bind_param('iiisssssssssi', $_POST['customerId'], $_POST['jobTypeId'], $_POST['jobStatusId'], $newJobName, $_POST['jobStartDate'], $_POST['jobEndDate'], $_POST['jobNotes'], $_POST['locationName'], $_POST['streetAddress'], $_POST['city'], $_POST['state'], $_POST['followUpDate'], $_POST['updateJobId']);
+    $update_job_query->execute();
+}
 
     // Update TasksRoles details
     if (isset($_POST['updateRoleTaskRoleId'])) {

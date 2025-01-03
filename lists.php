@@ -46,7 +46,7 @@ while($row_index <= array_key_last($list_rows)) {
             //          A link in the first column
             //          A dropdown in a form
             //          A text field in a form
-            //          A standard cell with no extra requirements
+            //          A standard cell with no extra requirements (i.e. not part of a form)
 
             $is_update_cell = ($list_meta['no_update'] == FALSE && $list_meta['update_names'][$col_index] != 'NA');
 
@@ -89,7 +89,7 @@ while($row_index <= array_key_last($list_rows)) {
         <input type="submit" value="Update">
     </form>';
     }
-    $rowoutput .='<form action="'.get_pagetype_ref('link').'" method="post">
+    $rowoutput .='<form action="'.get_pagetype_ref('link').'" method="post" >
         <input type="hidden" name="deleteRef1" value="'.$list_rows[$row_index][$list_meta['num_cols']];
     if(isset($list_rows[$row_index][$list_meta['num_cols']+1])) {
         $rowoutput .= '">

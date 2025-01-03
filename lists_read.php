@@ -4,8 +4,8 @@
     $list_rows[]
             ['#'] = Index for an array with data for each row (e.g. $list_rows['0'] = array with data for first row)
             ['#']['#'] = Index for data in a givn row and column, in that order (e.g. $list_rows['0']['1'] = data for first row, second column)
-            - Each row has an extra column at the end with the database's ID number for the item in the row (e.g. the last column on a row for Customers with be customerId)
-            - Some rows has an additional extra column with identifying information necessary for deleting the row
+            - Each row has an extra column at the end with the database's ID number for the item in the row (e.g. the last column on a row for Customers will be customerId)
+            - Some rows have an additional extra column with identifying information necessary for deleting the row
 
     $list_meta[]
             'add_form_row' = HTML for the <form> row used to add new items
@@ -24,19 +24,21 @@ $list_meta = [];
 // Query data and build arrays for the 
 //    ********** Jobs page **********
 //
+
 if ($pagetype == "Jobs") {
 
     $base_query = "SELECT
-    jobName, customerName, DATE_FORMAT(startDate,'%m/%d/%Y'), DATE_FORMAT(endDate,'%m/%d/%Y'), locationName, streetAddress, city, state, status, comments, jobId
+    j.jobName, c.customerName, DATE_FORMAT(j.jobStartDate,'%m/%d/%Y'), DATE_FORMAT(j.jobEndDate,'%m/%d/%Y'), DATE_FORMAT(j.followUpDate,'%m/%d/%Y'), jt.jobTypeName, js.jobStatusName, jobId
 	FROM Jobs j 
-    LEFT JOIN Customers c ON j.customerId = c.customerId;";
+    LEFT JOIN Customers c ON j.customerId = c.customerId
+    LEFT JOIN JobStatuses js ON j.jobStatusId = js.jobStatusId
+    LEFT JOIN JobTypes jt ON j.jobTypeId = jt.jobTypeId
+    WHERE js.hidden != 1;";
 
-    $base_result = $purple_db->prepare($base_query);
-    $base_sql_query->execute();
-    $base_result = $base_sql_query->get_result();
+    $base_result = $purple_db->query($base_query);
 
     // Add first row as colmun headers
-    $list_rows['0'] = ['Job Name','Customer Name','Start Date','End Date','Location Name','Street Address','City','State','Status','Comments'];
+    $list_rows['0'] = ['Job Name','Customer Name','Start Date','End Date','Follow Up Date','Job Type','Status'];
 
     // Add the rest of the rows
     $index = 1;
@@ -46,37 +48,11 @@ if ($pagetype == "Jobs") {
     }
 
     // Create meta data array
-    $list_meta['num_cols'] = 10;
+    $list_meta['num_cols'] = 7;
     $list_meta['no_update'] = TRUE;
-    $list_meta['update_names'] = ['NA','NA','NA','NA','NA','NA','NA','NA','NA','NA'];
+    $list_meta['update_names'] = ['NA','NA','NA','NA','NA','NA','NA'];
     $list_meta['link_first_col'] = TRUE;
-    $list_meta['dropdowns'] = ['NA','NA','NA','NA','NA','NA','NA','NA','NA','NA'];
-
-    // Create HTML for the Add form row
-    $customer_result = $purple_db->query("SELECT customerId, customerName FROM Customers ORDER BY customerName ASC");
-
-    $form_row = '
-<form action="" method="post" class="Add">
-    <tr bgcolor = white>
-        <td id="Jobs0"><input type="Text" name="NewJobName" required></td>
-        <td id="Jobs1"><select name="NewCustomerId"><option value="none"></option>';
-    foreach($customer_result as $customer){
-        $form_row .= "<option value=".$customer['customerId'].">".$customer['customerName']."</option>";
-    }
-    $form_row .= '</select></td>
-        <td id="Jobs2"><input type="Date" name="NewStartDate" required></td>
-        <td id="Jobs3"><input type="Date" name="NewEndDate" required></td>
-        <td id="Jobs4"><input type="Text" name="NewLocationName"></td>
-        <td id="Jobs5"><input type="Text" name="NewStreetAddress"></td>
-        <td id="Jobs6"><input type="Text" name="NewCity"></td>
-        <td id="Jobs7"><input type="Text" name="NewState"></td>
-        <td id="Jobs8"><input type="Text" name="NewStatus"></td>
-        <td id="Jobs9"><input type="Text" name="NewComments"></td>
-        <td id="Jobs10"><input type="submit" value="Add Job"></td>
-    </tr>
-</form>';
-
-    $list_meta['add_form_row'] = $form_row;
+    $list_meta['dropdowns'] = ['NA','NA','NA','NA','NA','NA','NA'];
 
 }
 
@@ -144,7 +120,7 @@ if ($pagetype == "Customers") {
         $alt_contacts = $purple_db->query('SELECT altContactName, altContactPhone, altContactEmail, altContactId FROM AltContacts WHERE customerId = '.$row['5'].' ;');
 
         if ($alt_contacts->num_rows != 0) {
-            $list_rows[$index++] = ['','Alternate Contacts', '', '', '', ''];
+            $list_rows[$index++] = ['', 'Alternate Contacts', '', '', '', ''];
 
             while($alt_row = mysqli_fetch_array($alt_contacts, MYSQLI_NUM)) {
                 $list_rows[$index++] = array_merge([''], array_slice($alt_row, 0, 3), [''], [end($alt_row)], ['alt']);
@@ -167,7 +143,7 @@ if ($pagetype == "Customers") {
 //
 if ($pagetype == "Employees") {
 
-    $base_query = "SELECT e.firstName, e.lastName, r.roleName, e.employeeId
+    $base_query = "SELECT 'View', e.firstName, e.lastName, r.roleName, e.employeeId
 	FROM Employees e 
     LEFT JOIN EmployeesRoles er ON e.employeeId = er.employeeId 
     LEFT JOIN Roles r ON er.roleId = r.roleId
@@ -178,7 +154,7 @@ if ($pagetype == "Employees") {
     $base_result = $base_sql_query->get_result();
 
     // Add first row as colmun headers
-    $list_rows['0'] = ['First Name','Last Name','Qualified Roles'];
+    $list_rows['0'] = ['Details','First Name','Last Name','Qualified Roles'];
 
     // Add the rest of the rows
     $index = 1;
@@ -187,8 +163,8 @@ if ($pagetype == "Employees") {
     {
         $last_key = array_key_last($list_rows);
 
-        if($list_rows[$last_key]['0'].$list_rows[$last_key]['1'] == $row['0'].$row['1']){
-            $list_rows[$last_key]['2'] = $list_rows[$last_key]['2'].' // '.$row['2'];
+        if($list_rows[$last_key]['1'].$list_rows[$last_key]['2'] == $row['1'].$row['2']){
+            $list_rows[$last_key]['3'] = $list_rows[$last_key]['3'].' // '.$row['3'];
             $index++;
         }
         else {
@@ -197,24 +173,13 @@ if ($pagetype == "Employees") {
     }
 
     // Create meta data array
-    $list_meta['num_cols'] = 3;
-    $list_meta['no_update'] = FALSE;
-    $list_meta['update_names'] = ['firstName','lastName','NA'];
-    $list_meta['link_first_col'] = FALSE;
-    $list_meta['dropdowns'] = ['NA','NA','NA'];
+    $list_meta['num_cols'] = 4;
+    $list_meta['no_update'] = TRUE;
+    $list_meta['update_names'] = ['NA','NA','NA','NA'];
+    $list_meta['link_first_col'] = TRUE;
+    $list_meta['dropdowns'] = ['NA','NA','NA','NA'];
 
-    // Create HTML for the Add form row
-    $form_row = '
-<form action="" method="post" class="Add">
-    <tr bgcolor = white>
-        <td id="Employees0"><input type="Text" name="NewFirstName" required></td>
-        <td id="Employees1"><input type="Text" name="NewLastName" required></td>
-        <td id="Employees2">N/A</td>
-        <td id="Employees3"><input type="submit" value="Add Employee"></td>
-    </tr>
-</form>';
 
-    $list_meta['add_form_row'] = $form_row;
 
 }
 

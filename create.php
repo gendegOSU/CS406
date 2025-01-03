@@ -117,27 +117,33 @@ if (isset($_POST['NewEquip'])) {
 }
 
 // Add New Jobs
-if (isset($_POST['NewJobName'])) {
+if (isset($_POST['NewJobStatusId'])) {
 
     // Check if the end date is before the start date
-    if( preg_replace('/\D+/','',$_POST['NewStartDate']) > preg_replace('/\D+/','',$_POST['NewEndDate']) ){
-        $reportmessage = 'The Job was not added because the end date is before the start date';
+    if( preg_replace('/\D+/','',$_POST['NewJobStartDate']) > preg_replace('/\D+/','',$_POST['NewJobEndDate']) ){
+        append_report_message('The Job was not added because the end date is before the start date');
     }
     // If all is good, add the new job
     else {
-        if($_POST['NewCustomerId'] == 'none'){
-            $newCustId = NULL;
+        
+        if ($_POST['NewStreetAddress'] != '') {
+            $newJobName = $_POST['NewStreetAddress'];
         } else {
-            $newCustId = $_POST['NewCustomerId'];
+            $customer_query = $purple_db->prepare('SELECT customerName FROM Customers WHERE customerId = ?;');
+            $customer_query->bind_param('i', $_POST['NewCustomerId']);
+            $customer_query->execute();
+            $customer_result = $customer_query->get_result()->fetch_assoc();
+
+            $newJobName = $customer_result['customerName'].' - '.$_POST['NewJobStartDate'].' to '.$_POST['NewJobEndDate'];
         }
 
-        $add_job_query = $purple_db->prepare('INSERT INTO Jobs (jobName, customerId, startDate, endDate, locationName, streetAddress, city, state, status, comments)
-            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ? );');
-        $add_job_query->bind_param('sissssssss', $_POST['NewJobName'], $newCustId, $_POST['NewStartDate'], $_POST['NewEndDate'], $_POST['NewLocationName'], $_POST['NewStreetAddress'], 
-            $_POST['NewCity'], $_POST['NewState'], $_POST['NewStatus'], $_POST['NewComments']);
+        $add_job_query = $purple_db->prepare('INSERT INTO Jobs (customerId, jobTypeId, jobStatusId, jobName, jobStartDate, jobEndDate, jobNotes, locationName, streetAddress, city, state, followUpDate)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);');
+        $add_job_query->bind_param('iiisssssssss', $_POST['NewCustomerId'], $_POST['NewJobTypeId'], $_POST['NewJobStatusId'], $newJobName, $_POST['NewJobStartDate'], $_POST['NewJobEndDate'], 
+            $_POST['NewJobNotes'], $_POST['NewLocationName'], $_POST['NewStreetAddress'], $_POST['NewCity'], $_POST['NewState'], $_POST['NewFollowUpDate']);
         $add_job_query->execute();
 
-        $reportmessage = 'The new Job has been added';
+        append_report_message('The new Job has been added');
     }
 }
 

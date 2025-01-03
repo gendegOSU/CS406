@@ -7,7 +7,7 @@ $list_pages = ['Customers', 'Jobs', 'Materials', 'Employees', 'Equipment'];
 
 
 if (in_array($pagetype, $side_nav_pages)) {
-    include 'sideNav.php';
+    include 'side_nav.php';
 }
 
 
@@ -29,7 +29,7 @@ elseif ($pagetype === 'Admin') {
 
 
 if (in_array($pagetype, $side_nav_pages)) {
-    include 'closeSideNav.php';
+    include 'close_side_nav.php';
 }
 
 
