@@ -132,7 +132,7 @@ if(isset($_POST['deleteType'])) {
         $delete_query->bind_param('i', $_POST['deleteRef1']);
         $delete_query->execute();
 
-        $reportmessage = 'The Equipment has been deleted';
+        append_report_message('The Equipment has been deleted');
     }
 
     // Delete from EquipmentTypes
@@ -241,6 +241,15 @@ if(isset($_POST['deleteType'])) {
                 append_report_message($error->getMessage());
             }
         }
+    }
+
+    // Delete from Materials
+    elseif($_POST['deleteType'] == 'Materials') {
+        $delete_query = $purple_db->prepare('UPDATE Materials SET quantity = 0 WHERE materialId = ?;');
+        $delete_query->bind_param('i', $_POST['deleteRef1']);
+        $delete_query->execute();
+
+        append_report_message('The Material has been deleted');
     }
 
 }

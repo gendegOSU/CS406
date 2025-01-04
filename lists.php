@@ -64,7 +64,7 @@ while($row_index <= array_key_last($list_rows)) {
                 $rowoutput .= '</select></td>';
             }
             elseif ($is_update_cell) {
-                $rowoutput .= '<td class="cell" id="'.get_pagetype_ref().$col_index.'"><input type="text" name="'.$list_meta['update_names'][$col_index].'" value="'.$col_content.'"></td>';
+                $rowoutput .= '<td class="cell" id="'.get_pagetype_ref().$col_index.'"><input type="'.(isset($list_meta['input_type'])?$list_meta['input_type'][$col_index]:'text').'" name="'.$list_meta['update_names'][$col_index].'" value="'.$col_content.'"></td>';
             }
             else {
                 $rowoutput .= '<td class="cell" id="'.get_pagetype_ref().$col_index.'">'.$col_content.'</td>';

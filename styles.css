@@ -54,15 +54,22 @@ a:visited {color:#1801a8;}
 #Customers2 input {width: 11em;}
 #Customers3 input {width: 18em;}
 
+/* --- Materials Page Styles --- */
+
+#Materials1 input {width: 5em;}
+#Materials2 input {width: 7em;}
+#Materials3 input {width: 10em;}
+#Materials4 input {width: 5em;}
+#Materials5 input {width: 5em;}
+#Materials6 input {width: 5em;}
+#Materials7 input {width: 10em;}
 
 /* --- Employees Page Styles --- */
 
 .ColumnLabels {text-align: center; font-weight: bold; background-color: f1f1f1;}
 
 
-/* --- Equipment Page Styles --- */
 
-#Equipment2 input {width: 4em;}
 
 
 

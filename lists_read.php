@@ -179,66 +179,6 @@ if ($pagetype == "Employees") {
     $list_meta['link_first_col'] = TRUE;
     $list_meta['dropdowns'] = ['NA','NA','NA','NA'];
 
-
-
-}
-
-
-// Query data and build arrays for the
-//    ********** Employees Roles page **********
-//
-if ($pagetype == "EmployeesRoles") {
-
-    $base_query = "SELECT CONCAT(firstName,' ', lastName) employeeName, roleName, e.employeeId, r.roleId
-	FROM Employees e 
-    LEFT JOIN EmployeesRoles er ON e.employeeId = er.employeeId 
-    JOIN Roles r ON er.roleId = r.roleId
-    ORDER BY employeeName ASC;";
-
-    $base_sql_query = $purple_db->prepare($base_query);
-    $base_sql_query->execute();
-    $base_result = $base_sql_query->get_result();
-
-    // Add first row as colmun headers
-    $list_rows['0'] = ['Employee Name','Role Name'];
-
-    // Add the rest of the rows
-    $index = 1;
-    while($row = mysqli_fetch_array($base_result, MYSQLI_NUM))
-    {
-        $list_rows[$index++] = $row;
-    }
-
-    // Create meta data array
-    $list_meta['num_cols'] = 2;
-    $list_meta['no_update'] = FALSE;
-    $list_meta['update_names'] = ['NA','roleId'];
-    $list_meta['link_first_col'] = FALSE;
-    $list_meta['dropdowns'] = ['NA','NA'];
-
-    // Create HTML for the Add form row
-    $employee_result = $purple_db->query("SELECT employeeId, firstName, lastName FROM Employees ORDER BY firstName, lastName ASC");
-    $role_result = $purple_db->query("SELECT roleId, roleName FROM Roles ORDER BY roleName ASC");
-
-    $form_row = '
-<form action="" method="post" class="Add">
-    <tr bgcolor = white>
-        <td id="EmployeesRoles0"><select name="NewEmployeeId" required>';
-    foreach($employee_result as $employee){
-        $form_row .= "<option value=".$employee['employeeId'].">".$employee['firstName']." ".$employee['lastName']."</option>";
-    }
-    $form_row .= '</select></td>
-        <td id="EmployeesRoles1"><select name="NewRoleId" required>';
-    foreach($role_result as $role){
-        $form_row .= "<option value=".$role['roleId'].">".$role['roleName']."</option>";
-    }
-    $form_row .= '</select></td>
-        <td id="EmployeesRoles2"><input type="submit" value="Add Employee Role"></td>
-    </tr>
-</form>';
-
-    $list_meta['add_form_row'] = $form_row;
-
 }
 
 
@@ -286,16 +226,15 @@ if ($page_sub == "Roles") {
 //
 if ($pagetype == "Equipment") {
 
-    $base_query = "SELECT e.equipmentName, et.equipmentTypeName, quantityOnHand, external, equipmentId
+    $base_query = "SELECT e.equipmentName, et.equipmentTypeName, e.equipmentIdentifier, e.external, v.vendorName, e.equipmentId
 	FROM Equipment e 
-    JOIN EquipmentTypes et ON e.equipmentTypeId = et.equipmentTypeId;";
+    LEFT JOIN EquipmentTypes et ON e.equipmentTypeId = et.equipmentTypeId
+    LEFT JOIN Vendors v ON e.vendorId = v.vendorId;";
 
-    $base_sql_query = $purple_db->prepare($base_query);
-    $base_sql_query->execute();
-    $base_result = $base_sql_query->get_result();
+    $base_result = $purple_db->query($base_query);
 
     // Add first row as colmun headers
-    $list_rows['0'] = ['Equipment Name','Equipment Type','Quantity On hand','External Source'];
+    $list_rows['0'] = ['Equipment Name','Equipment Type','Equipment Identifier','External Source', 'Vendor'];
 
     // Add the rest of the rows
     $index = 1;
@@ -305,27 +244,45 @@ if ($pagetype == "Equipment") {
     }
 
     // Create meta data array
-    $list_meta['num_cols'] = 4;
+    $list_meta['num_cols'] = 5;
     $list_meta['no_update'] = FALSE;
-    $list_meta['update_names'] = ['equipmentName','equipmentTypeId','quantityOnHand','external'];
+    $list_meta['update_names'] = ['equipmentName','equipmentTypeId','equipmentIdentifier','external', 'vendorId'];
     $list_meta['link_first_col'] = FALSE;
-    $list_meta['dropdowns'] = ['NA','NA','NA','NA'];
+
+    $equipmentTypes_query = "SELECT equipmentTypeName, equipmentTypeId FROM EquipmentTypes ORDER BY equipmentTypeName ASC;";
+    $equipmentTypes_result = $purple_db->query($equipmentTypes_query);
+
+    $equipmentType_options = [];
+    foreach($equipmentTypes_result as $equipmentType){
+        $equipmentType_options[$equipmentType['equipmentTypeId']] = $equipmentType['equipmentTypeName'];
+    }
+
+    $vendors_query = "SELECT vendorName, vendorId FROM Vendors ORDER BY vendorName ASC;";
+    $vendors_result = $purple_db->query($vendors_query);
+
+    $vendor_options = ['none' => ''];
+    foreach($vendors_result as $vendor){
+        $vendor_options[$vendor['vendorId']] = $vendor['vendorName'];
+    }
+
+    $external_options = ['1' => 'Yes', '0' => 'No'];
+    $list_meta['dropdowns'] = ['NA',$equipmentType_options,'NA',$external_options,$vendor_options];
 
     // Create HTML for the Add form row
-    $equipmentTypes_result = $purple_db->query("SELECT equipmentTypeId, equipmentTypeName FROM EquipmentTypes ORDER BY equipmentTypeName ASC");
 
     $form_row = '
 <form action="" method="post" class="Add">
-    <tr bgcolor = white>
-        <td id="Equipment0"><input type="Text" name="NewEquipmentName" required></td>
+    <tr bgcolor=white>
+        <td id="Equipment0"><input type="text" name="NewEquipmentName" required></td>
         <td id="Equipment1"><select name="NewEquipmentTypeId" required>';
-    foreach($equipmentTypes_result as $equipmentType){
-        $form_row .= "<option value=".$equipmentType['equipmentTypeId'].">".$equipmentType['equipmentTypeName']."</option>";
-    }
+    $form_row .= get_dropdown_options($equipmentTypes_result);
     $form_row .= '</select></td>
-        <td id="Equipment2"><input type=number name="NewQuantityOnHand"></td>
+        <td id="Equipment2"><input type="text" name="NewEquipmentIdentifier"></td>
         <td id="Equipment3"><select name="NewExternal" required><option value="1">Yes</option><option value="0" selected>No</option></select></td>
-        <td id="Equipment4"><input type="submit" value="Add Equipment"></td>
+        <td id="Equipment4"><select name="NewVendorId"><option></option>';
+    $form_row .= get_dropdown_options($vendors_result);    
+    $form_row .= '</select></td>
+        <td id="Equipment5"><input type="submit" value="Add Equipment"></td>
     </tr>
 </form>';
 
@@ -527,6 +484,58 @@ if ($page_sub == "Vendors") {
 </form>';
 
     $list_meta['add_form_row'] = $form_row;
+}
+
+
+// Query data and build arrays for the
+//    ********** Materials page **********
+//
+if ($pagetype == "Materials") {
+
+    $base_query = "SELECT description, quantity, unitOfIssue, quality, length, width, height, finish, lastValidated, materialId
+    FROM Materials WHERE quantity != 0 ORDER BY description ASC;";
+    $base_result = $purple_db->query($base_query);
+
+    // Add first row as colmun headers
+    $list_rows['0'] = ['Description', 'Quantity', 'Unit of Issue', 'Quality', 'Length', 'Width', 'Height', 'Finish', 'Last Validated'];
+
+    // Add the rest of the rows
+    $index = 1;
+    while($row = mysqli_fetch_array($base_result, MYSQLI_NUM))
+    {
+        $row['8'] = substr($row['8'],0,10);
+        $list_rows[$index++] = $row;
+    }
+
+    // Create meta data array
+    $list_meta['num_cols'] = 9;
+    $list_meta['no_update'] = FALSE;
+    $list_meta['update_names'] = ['NA','quantity','NA','NA','NA','NA','NA','NA','lastValidated'];
+    $list_meta['link_first_col'] = FALSE;
+    $list_meta['dropdowns'] = ['NA','NA','NA','NA','NA','NA','NA','NA','NA'];
+    $list_meta['input_type'] = ['text','number','text','text','text','text','text','text','date'];
+
+    // Create HTML for the Add form row
+    $form_row = '
+<form action="" method="post" class="Add">
+    <tr bgcolor=white>
+        <td id="Materials0"><input type="text" name="NewDescription" required></td>
+        <td id="Materials1"><input type="number" name="NewQuantity" required></td>
+        <td id="Materials2"><input type="text" name="NewUnitOfIssue"></td>
+        <td id="Materials3"><input type="text" name="NewQuality"></td>
+        <td id="Materials4"><input type="text" name="NewLength"></td>
+        <td id="Materials5"><input type="text" name="NewWidth"></td>
+        <td id="Materials6"><input type="text" name="NewHeight"></td>
+        <td id="Materials7"><input type="text" name="NewFinish"></td>
+        <td id="Materials8"><input type="date" name="NewLastValidated" value="'.date('Y-m-d').'"></td>
+        <td id="Materials9"><input type="submit" value="Add Material"></td>
+    </tr>
+</form>';
+
+    $list_meta['add_form_row'] = $form_row;
+
+
+    // TODO add a validate all button
 }
 
 

@@ -218,11 +218,18 @@ if (isset($_POST['NewRoleName'])) {
 
 // Add New Equipment
 if (isset($_POST['NewEquipmentName'])) {
-    $add_equipment_query = $purple_db->prepare('INSERT INTO Equipment (equipmentName, equipmentTypeId, quantityOnHand, external) VALUES(?, ?, ?, ? );');
-    $add_equipment_query->bind_param('siii', $_POST['NewEquipmentName'], $_POST['NewEquipmentTypeId'], $_POST['NewQuantityOnHand'], $_POST['NewExternal']);
+
+    if ($_POST['NewVendorId'] == '') {
+        $vendorId = NULL;
+    } else {
+        $vendorId = $_POST['NewVendorId'];
+    }
+
+    $add_equipment_query = $purple_db->prepare('INSERT INTO Equipment (equipmentName, equipmentTypeId, equipmentIdentifier, external, vendorId) VALUES(?, ?, ?, ?, ? );');
+    $add_equipment_query->bind_param('sisii', $_POST['NewEquipmentName'], $_POST['NewEquipmentTypeId'], $_POST['NewEquipmentIdentifier'], $_POST['NewExternal'], $vendorId);
     $add_equipment_query->execute();
 
-    $reportmessage = 'The new Equipment has been added';
+    append_report_message('The new Equipment has been added');
 }
 
 // Add New Equipment Types
@@ -314,5 +321,32 @@ if (isset($_POST['NewVendorName'])) {
         }
     }
 }
+
+// Add New Material
+if (isset($_POST['NewDescription'])) {
+
+    $check_materials_query = $purple_db->prepare('SELECT materialId FROM Materials WHERE description = ? AND unitOfIssue = ? AND quality = ? AND length = ? AND width = ? AND height = ? AND finish = ?;');
+    $check_materials_query->bind_param('sssssss', $_POST['NewDescription'], $_POST['NewUnitOfIssue'], $_POST['NewQuality'], $_POST['NewLength'], $_POST['NewWidth'], $_POST['NewHeight'], $_POST['NewFinish']);
+    $check_materials_query->execute();
+
+    $check_materials_values = $check_materials_query->get_result()->fetch_all();
+
+    if ($check_materials_values) {
+        $materialId = $check_materials_values['0']['0'];
+
+        $revive_material_query = $purple_db->prepare('UPDATE Materials SET quantity = ?, lastValidated = ? WHERE materialId = ?;');
+        $revive_material_query->bind_param('isi', $_POST['NewQuantity'], $_POST['NewLastValidated'], $materialId);
+        $revive_material_query->execute();        
+    } else {
+        $check_materials_query->close();
+
+        $add_material_query = $purple_db->prepare('INSERT INTO Materials (description, quantity, unitOfIssue, quality, length, width, height, finish, lastValidated) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);');
+        $add_material_query->bind_param('sisssssss', $_POST['NewDescription'], $_POST['NewQuantity'], $_POST['NewUnitOfIssue'], $_POST['NewQuality'], $_POST['NewLength'], $_POST['NewWidth'], $_POST['NewHeight'], $_POST['NewFinish'], $_POST['NewLastValidated']);
+        $add_material_query->execute();
+    }
+
+    append_report_message('The Material has been added');
+}
+
 
 ?>

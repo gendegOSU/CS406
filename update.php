@@ -163,11 +163,18 @@ if(isset($_POST['updateType'])) {
 
     // Update Equipment
     if($_POST['updateType'] == 'Equipment') {
-        $update_query = $purple_db->prepare('UPDATE Equipment SET equipmentName = ?, equipmentTypeId = ?, quantityOnHand = ?, external = ? WHERE equipmentId = ?;');
-        $update_query->bind_param('siiii', $_POST['equipmentName'], $_POST['equipmentTypeId'], $_POST['quantityOnHand'], $_POST['external'], $_POST['updateRef']);
+
+        if ($_POST['vendorId'] == 'none') {
+            $vendorId = NULL;
+        } else {
+            $vendorId = $_POST['vendorId'];
+        }
+
+        $update_query = $purple_db->prepare('UPDATE Equipment SET equipmentName = ?, equipmentTypeId = ?, equipmentIdentifier = ?, external = ?, vendorId = ? WHERE equipmentId = ?;');
+        $update_query->bind_param('sisiii', $_POST['equipmentName'], $_POST['equipmentTypeId'], $_POST['equipmentIdentifier'], $_POST['external'], $vendorId, $_POST['updateRef']);
         $update_query->execute();
 
-        $reportmessage = 'The Equipment has been updated';
+        append_report_message('The Equipment has been updated');
     }
 
     // Update EquipmentTypes
@@ -215,5 +222,13 @@ if(isset($_POST['updateType'])) {
         append_report_message('The Vendor has been updated');
     }
 
+    // Update Materials
+    if($_POST['updateType'] == 'Materials') {
+        $update_query = $purple_db->prepare('UPDATE Materials SET quantity = ?, lastValidated = ? WHERE materialId = ?;');
+        $update_query->bind_param('isi', $_POST['quantity'], $_POST['lastValidated'], $_POST['updateRef']);
+        $update_query->execute();
+
+        append_report_message('The Material has been updated');
+    }
 
 }

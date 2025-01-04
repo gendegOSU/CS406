@@ -59,7 +59,7 @@ echo '    <div class="sectionLabel">--- Customer Details ---</div>
     </form>';
 
 
-// TODO Add Jobs list
+// TODO Add Jobs list when viewing specific customer
 // TODO Support multiple alternate contacts
 // TODO Update Alternate Customers
 // TODO Add Quick Job code to create.php

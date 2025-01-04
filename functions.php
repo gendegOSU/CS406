@@ -29,6 +29,7 @@ function get_dropdown_options($results, $selected = NULL) {
     /* Take a mysqli_result object with option names and option IDs as input and returns an HTML list of options for a dropdown input
        Passing a $selected value will make that option selected */
 
+    $results->data_seek(0);
     $key_list = array_keys($results->fetch_assoc());
     foreach ($key_list as $key) {
         if (substr($key,-4) == 'Name') $name = $key;
